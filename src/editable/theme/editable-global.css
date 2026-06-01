@@ -11,7 +11,10 @@
   Do not add data fetching, scripts, or route logic here.
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+
 body {
+  font-family: 'Roboto', sans-serif;
   background-color: var(--slot4-page-bg) !important;
   color: var(--slot4-page-text) !important;
   background-image: var(--slot4-body-gradient) !important;
@@ -37,6 +40,10 @@ body {
 
 .article-content h2 {
   color: var(--slot4-accent);
+}
+
+.article-content p {
+  margin-top: 1rem;
 }
 
 .article-content a {
