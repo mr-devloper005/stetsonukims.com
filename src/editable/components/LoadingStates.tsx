@@ -6,12 +6,12 @@ type LoadingStateProps = {
 }
 
 function PulseBlock({ className }: { className?: string }) {
-  return <div className={cn('animate-pulse rounded-2xl bg-current/10', className)} />
+  return <div className={cn('animate-pulse rounded-2xl bg-black/10', className)} />
 }
 
 export function PageLoadingState({ label = 'Loading page', className }: LoadingStateProps) {
   return (
-    <div className={cn('mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8', className)} aria-live="polite" aria-busy="true">
+    <div className={cn('mx-auto w-full max-w-[var(--editable-container)] px-4 py-12 sm:px-6 lg:px-8', className)} aria-live="polite" aria-busy="true">
       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-current/50">{label}</p>
       <PulseBlock className="mt-5 h-12 w-3/4 max-w-3xl" />
       <PulseBlock className="mt-4 h-5 w-2/3 max-w-2xl" />

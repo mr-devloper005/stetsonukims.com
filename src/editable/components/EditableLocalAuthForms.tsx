@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 const USERS_KEY = 'slot4:local-auth-users'
 const SESSION_KEY = 'slot4:local-auth-session'
+const LAST_SUBMIT_KEY = 'slot4:last-auth-submit'
 
 type LocalUser = {
   name: string
@@ -30,8 +31,20 @@ const saveSession = (user: Pick<LocalUser, 'name' | 'email'>) => {
   window.dispatchEvent(new Event('slot4-auth-change'))
 }
 
+const saveLastSubmit = (mode: 'login' | 'signup', payload: { name?: string; email: string }) => {
+  window.localStorage.setItem(
+    LAST_SUBMIT_KEY,
+    JSON.stringify({
+      mode,
+      name: payload.name || '',
+      email: payload.email,
+      submittedAt: new Date().toISOString(),
+    })
+  )
+}
+
 const inputClass = 'h-12 rounded-2xl border border-[var(--editable-border)] bg-white/85 px-4 text-base font-bold text-current outline-none transition placeholder:text-current/35 focus:border-current focus:bg-white'
-const buttonClass = 'inline-flex h-12 items-center justify-center rounded-2xl bg-current px-6 text-sm font-black uppercase tracking-[0.22em] text-white transition hover:-translate-y-0.5 disabled:opacity-60'
+const buttonClass = 'inline-flex h-12 w-full items-center justify-center rounded-2xl bg-[#0f6fff] px-6 text-sm font-black uppercase tracking-[0.22em] text-white transition hover:-translate-y-0.5 hover:bg-[#0a5ee0] disabled:opacity-60'
 
 export function EditableLocalLoginForm() {
   const router = useRouter()
@@ -43,6 +56,7 @@ export function EditableLocalLoginForm() {
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const normalizedEmail = email.trim().toLowerCase()
+    saveLastSubmit('login', { email: normalizedEmail })
     const user = readUsers().find((item) => item.email.toLowerCase() === normalizedEmail)
     if (!user || user.password !== password) {
       setStatus('error')
@@ -60,7 +74,7 @@ export function EditableLocalLoginForm() {
       <input className={inputClass} type="email" placeholder="Email address" value={email} onChange={(event) => setEmail(event.target.value)} required />
       <input className={inputClass} type="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} required />
       {message ? <p className={`rounded-2xl px-4 py-3 text-sm font-bold ${status === 'success' ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{message}</p> : null}
-      <button type="submit" className={buttonClass}>Continue</button>
+      <button type="submit" className={buttonClass}>Submit Login</button>
     </form>
   )
 }
@@ -77,6 +91,7 @@ export function EditableLocalSignupForm() {
     event.preventDefault()
     const normalizedName = name.trim()
     const normalizedEmail = email.trim().toLowerCase()
+    saveLastSubmit('signup', { name: normalizedName, email: normalizedEmail })
     if (password.length < 4) {
       setStatus('error')
       setMessage('Use at least 4 characters for local demo password.')
@@ -102,7 +117,7 @@ export function EditableLocalSignupForm() {
       <input className={inputClass} type="email" placeholder="Email address" value={email} onChange={(event) => setEmail(event.target.value)} required />
       <input className={inputClass} type="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} required />
       {message ? <p className={`rounded-2xl px-4 py-3 text-sm font-bold ${status === 'success' ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{message}</p> : null}
-      <button type="submit" className={buttonClass}>Start now</button>
+      <button type="submit" className={buttonClass}>Submit Register</button>
     </form>
   )
 }
