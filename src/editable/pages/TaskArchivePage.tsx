@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Camera, FileText, Filter, UserRound } from 'lucide-react'
+import { UserRound } from 'lucide-react'
 import { buildTaskMetadata } from '@/lib/seo'
 import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
 import { fetchPaginatedTaskPosts } from '@/lib/task-data'
@@ -7,7 +7,7 @@ import { getTaskConfig, type TaskKey } from '@/lib/site-config'
 import type { SiteFeedPagination, SitePost } from '@/lib/site-connector'
 import { taskPageMetadata } from '@/config/site.content'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
-import { getEditableExcerpt, getEditablePostImage } from '@/editable/cards/PostCards'
+import { getEditableExcerpt, getEditablePostImage, getEditableCategory } from '@/editable/cards/PostCards'
 
 export const revalidate = 3
 
@@ -42,32 +42,43 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
 
   return (
     <EditableSiteShell>
-      <main className="bg-[#f3f1e8] text-[#1d1d1b]">
-        <section className="mx-auto grid max-w-[var(--editable-container)] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_330px] lg:px-8">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#9AB17A]">{taskLabel}</p>
-            <h1 className="mt-3 text-5xl font-black leading-[1.02] tracking-[-0.05em] sm:text-6xl">Premium browsing for {taskLabel.toLowerCase()}</h1>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-black/65">A clean discovery surface with refined cards, fast scanning, and safe post fallbacks.</p>
+      <main className="bg-[#0a0a0a] text-[#f0f0f0]">
+        <section className="border-b border-white/6 bg-[#0a0a0a] py-12 lg:py-16">
+          <div className="mx-auto max-w-[var(--editable-container)] px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#6366f1]">Gallery &middot; {taskLabel}</p>
+                <h1 className="mt-3 text-3xl font-bold tracking-[-0.03em] text-white sm:text-4xl lg:text-5xl">Image posts with a gallery-first browsing experience.</h1>
+                <p className="mt-3 max-w-2xl text-[15px] leading-7 text-white/45">Image pages should lead with visual impact, stronger cards, and a portfolio-like rhythm.</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {['Gallery', 'Visual-first', 'Portfolio mood'].map((chip) => (
+                    <span key={chip} className="rounded-full border border-white/10 px-4 py-1.5 text-[12px] font-medium text-white/50">{chip}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-[13px] text-white/40">{pagination.total || posts.length} posts &middot; All categories</span>
+                <form action={basePath} className="flex items-center gap-2">
+                  <select name="category" defaultValue={category} className="h-10 rounded-lg border border-white/10 bg-[#161616] px-3 text-[13px] text-white/80 outline-none">
+                    <option value="all">All categories</option>
+                    {CATEGORY_OPTIONS.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
+                  </select>
+                  <button className="h-10 rounded-lg bg-[#6366f1] px-4 text-[13px] font-semibold text-white transition hover:bg-[#5558e6]">Apply</button>
+                </form>
+              </div>
+            </div>
           </div>
-          <form action={basePath} className="rounded-3xl border border-black/10 bg-white p-5">
-            <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-black/55"><Filter className="h-4 w-4" /> Category</p>
-            <select name="category" defaultValue={category} className="mt-4 h-12 w-full rounded-xl border border-black/15 px-3 text-sm">
-              <option value="all">All categories</option>
-              {CATEGORY_OPTIONS.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
-            </select>
-            <button className="mt-3 h-11 w-full rounded-xl bg-black text-sm font-bold text-white">Apply</button>
-          </form>
         </section>
 
-        <section className="mx-auto max-w-[var(--editable-container)] px-4 pb-16 sm:px-6 lg:px-8">
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <section className="mx-auto max-w-[var(--editable-container)] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+          <div className="columns-1 gap-5 space-y-5 sm:columns-2 lg:columns-3">
             {posts.map((post, index) => <ArchiveCard key={post.id || post.slug} task={task} post={post} basePath={basePath} index={index} />)}
           </div>
-          {!posts.length ? <p className="rounded-2xl border border-dashed border-black/20 bg-white p-8 text-center text-sm text-black/65">No posts found for this category.</p> : null}
-          <div className="mt-10 flex items-center justify-center gap-3">
-            {pagination.hasPrevPage ? <Link href={pageHref(basePath, category, page - 1)} className="rounded-xl border border-black/15 bg-white px-4 py-2 text-sm font-bold">Previous</Link> : null}
-            <span className="rounded-xl bg-black px-4 py-2 text-sm font-bold text-white">Page {page} of {pagination.totalPages || 1}</span>
-            {pagination.hasNextPage ? <Link href={pageHref(basePath, category, page + 1)} className="rounded-xl border border-black/15 bg-white px-4 py-2 text-sm font-bold">Next</Link> : null}
+          {!posts.length ? <p className="rounded-2xl border border-dashed border-white/15 bg-[#161616] p-10 text-center text-[14px] text-white/45">No posts found for this category.</p> : null}
+          <div className="mt-12 flex items-center justify-center gap-3">
+            {pagination.hasPrevPage ? <Link href={pageHref(basePath, category, page - 1)} className="rounded-lg border border-white/10 bg-[#161616] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-white/10">Previous</Link> : null}
+            <span className="rounded-lg bg-[#6366f1] px-5 py-2.5 text-[13px] font-semibold text-white">Page {page} of {pagination.totalPages || 1}</span>
+            {pagination.hasNextPage ? <Link href={pageHref(basePath, category, page + 1)} className="rounded-lg border border-white/10 bg-[#161616] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-white/10">Next</Link> : null}
           </div>
         </section>
       </main>
@@ -82,34 +93,41 @@ function detailHref(task: TaskKey, slug: string, basePath: string) {
 
 function ArchiveCard({ task, post, basePath, index }: { task: TaskKey; post: SitePost; basePath: string; index: number }) {
   const href = detailHref(task, post.slug, basePath)
+
   if (task === 'image') {
+    const aspects = ['aspect-[3/4]', 'aspect-[4/3]', 'aspect-square', 'aspect-[4/5]', 'aspect-[3/2]']
+    const aspect = aspects[index % aspects.length]
     return (
-      <Link href={href} className="group overflow-hidden rounded-3xl border border-black/10 bg-white">
-        <img src={getEditablePostImage(post)} alt={post.title} className={`w-full object-cover ${index % 3 === 0 ? 'aspect-[3/4]' : 'aspect-[4/3]'}`} />
-        <div className="p-4">
-          <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[#9AB17A]"><Camera className="h-3 w-3" /> Image</p>
-          <h2 className="mt-2 line-clamp-2 text-xl font-black">{post.title}</h2>
+      <Link href={href} className="group block break-inside-avoid overflow-hidden rounded-2xl border border-white/8 bg-[#161616] transition hover:border-white/15 hover:shadow-lg hover:shadow-black/30">
+        <div className="relative overflow-hidden">
+          <img src={getEditablePostImage(post)} alt={post.title} className={`w-full object-cover transition duration-700 group-hover:scale-[1.03] ${aspect}`} />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-4 pb-4 pt-10">
+            <span className="mb-1 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white/70 backdrop-blur-sm">{getEditableCategory(post)}</span>
+            <h2 className="line-clamp-2 text-[14px] font-semibold leading-snug text-white">{post.title}</h2>
+          </div>
         </div>
       </Link>
     )
   }
+
   if (task === 'profile') {
     return (
-      <Link href={href} className="rounded-3xl border border-black/10 bg-white p-5 text-center">
-        <img src={getEditablePostImage(post)} alt={post.title} className="mx-auto h-24 w-24 rounded-full object-cover" />
-        <h2 className="mt-3 line-clamp-2 text-xl font-black">{post.title}</h2>
-        <p className="mt-2 line-clamp-3 text-sm text-black/65">{getEditableExcerpt(post, 95)}</p>
-        <UserRound className="mx-auto mt-3 h-4 w-4 text-[#9AB17A]" />
+      <Link href={href} className="block break-inside-avoid rounded-2xl border border-white/8 bg-[#161616] p-6 text-center transition hover:border-white/15">
+        <img src={getEditablePostImage(post)} alt={post.title} className="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-white/10" />
+        <h2 className="mt-4 line-clamp-2 text-lg font-bold text-white">{post.title}</h2>
+        <p className="mt-2 line-clamp-3 text-[13px] leading-6 text-white/45">{getEditableExcerpt(post, 95)}</p>
+        <UserRound className="mx-auto mt-3 h-4 w-4 text-[#6366f1]" />
       </Link>
     )
   }
+
   return (
-    <Link href={href} className="overflow-hidden rounded-3xl border border-black/10 bg-white">
-      <img src={getEditablePostImage(post)} alt={post.title} className="aspect-[16/10] w-full object-cover" />
+    <Link href={href} className="group block break-inside-avoid overflow-hidden rounded-2xl border border-white/8 bg-[#161616] transition hover:border-white/15">
+      <img src={getEditablePostImage(post)} alt={post.title} className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105" />
       <div className="p-5">
-        <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[#9AB17A]"><FileText className="h-3 w-3" /> Entry {index + 1}</p>
-        <h2 className="mt-2 line-clamp-2 text-2xl font-black leading-tight">{post.title}</h2>
-        <p className="mt-3 line-clamp-3 text-sm text-black/65">{getEditableExcerpt(post, 130)}</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#6366f1]">{getEditableCategory(post)}</p>
+        <h2 className="mt-2 line-clamp-2 text-lg font-bold leading-tight text-white">{post.title}</h2>
+        <p className="mt-2 line-clamp-3 text-[13px] leading-6 text-white/45">{getEditableExcerpt(post, 130)}</p>
       </div>
     </Link>
   )
