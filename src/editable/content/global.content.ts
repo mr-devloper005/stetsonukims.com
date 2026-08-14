@@ -3,45 +3,42 @@ import { slot4BrandConfig } from '@/editable/theme/brand.config'
 export const globalContent = {
   site: {
     name: slot4BrandConfig.siteName,
-    tagline: slot4BrandConfig.tagline || 'Independent reading platform',
+    tagline: slot4BrandConfig.tagline || 'Business profiles & visual discovery',
     domain: slot4BrandConfig.domain,
     baseUrl: slot4BrandConfig.baseUrl,
   },
   nav: {
-    tagline: 'Independent reading platform',
+    tagline: '',
     primaryLinks: [
-      { label: 'Articles', href: '/articles' },
-      { label: 'Visuals', href: '/image-sharing' },
-      { label: 'Listings', href: '/listings' },
-      { label: 'Contact', href: '/contact' },
+      { label: 'Image', href: '/image' },
+      { label: 'About', href: '/about' },
     ],
     actions: {
-      primary: { label: 'Start exploring', href: '/' },
-      secondary: { label: 'Submit', href: '/contact' },
+      primary: { label: 'Get started', href: '/signup' },
+      secondary: { label: 'Learn more', href: '/about' },
     },
   },
   footer: {
-    tagline: 'Stories, resources, and discoverable posts',
-    description: 'A connected publishing surface for articles, visuals, listings, profiles, bookmarks, and downloadable resources.',
+    tagline: 'Business profiles & visual discovery',
+    description: 'Connects business owners with the profiles and images that grow their brand online. Stand out in your industry with a polished, searchable presence.',
     columns: [
       {
-        title: 'Explore',
+        title: 'Discover',
         links: [
-          { label: 'Articles', href: '/articles' },
-          { label: 'Listings', href: '/listings' },
-          { label: 'Images', href: '/image-sharing' },
-          { label: 'PDF Library', href: '/pdf' },
-        ],
-      },
-      {
-        title: 'Site',
-        links: [
+          { label: 'Image Gallery', href: '/image' },
           { label: 'About', href: '/about' },
           { label: 'Contact', href: '/contact' },
         ],
       },
+      {
+        title: 'Account',
+        links: [
+          { label: 'Login', href: '/login' },
+          { label: 'Sign up', href: '/signup' },
+        ],
+      },
     ],
-    bottomNote: 'Built for clean discovery and connected publishing.',
+    bottomNote: 'Stand out with a polished, searchable presence.',
   },
   commonLabels: {
     readMore: 'Read more',

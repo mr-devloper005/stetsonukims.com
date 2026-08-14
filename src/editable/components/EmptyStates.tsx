@@ -18,13 +18,13 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <section className={cn('rounded-[2rem] border border-black/10 bg-white p-8 text-center', className)}>
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-current/10">
-        <SearchX className="h-6 w-6" />
+    <section className={cn('rounded-2xl border border-white/8 bg-[#161616] p-8 text-center', className)}>
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/5">
+        <SearchX className="h-6 w-6 text-white/40" />
       </div>
-      <h2 className="mt-5 text-2xl font-black tracking-[-0.03em]">{title}</h2>
-      <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-black/65">{description}</p>
-      <Link href={actionHref} className="mt-6 inline-flex items-center gap-2 rounded-full border border-black/15 px-5 py-3 text-sm font-bold transition hover:bg-black hover:text-white">
+      <h2 className="mt-5 text-xl font-bold tracking-[-0.02em] text-white">{title}</h2>
+      <p className="mx-auto mt-3 max-w-xl text-[14px] leading-7 text-white/45">{description}</p>
+      <Link href={actionHref} className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-[13px] font-semibold text-white transition hover:bg-white/5">
         {actionLabel}
         <ArrowRight className="h-4 w-4" />
       </Link>
