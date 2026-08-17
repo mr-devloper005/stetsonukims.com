@@ -7,7 +7,7 @@ import { getTaskConfig, type TaskKey } from '@/lib/site-config'
 import type { SiteFeedPagination, SitePost } from '@/lib/site-connector'
 import { taskPageMetadata } from '@/config/site.content'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
-import { getEditableExcerpt, getEditablePostImage, getEditableCategory, getEditableRawPostImage, getEditableInitials } from '@/editable/cards/PostCards'
+import { getEditableExcerpt, getEditablePostImage, getEditableCategory } from '@/editable/cards/PostCards'
 
 export const revalidate = 3
 
@@ -114,13 +114,7 @@ function ArchiveCard({ task, post, basePath, index }: { task: TaskKey; post: Sit
     const profileImage = getEditableRawPostImage(post)
     return (
       <Link href={href} className="block break-inside-avoid rounded-2xl border border-white/8 bg-[#161616] p-6 text-center transition hover:border-white/15">
-        {profileImage ? (
-          <img src={profileImage} alt={post.title} className="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-white/10" />
-        ) : (
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#6366f1]/15 ring-2 ring-white/10">
-            <span className="text-xl font-bold text-[#6366f1]">{getEditableInitials(post)}</span>
-          </div>
-        )}
+        <img src={getEditablePostImage(post)} alt={post.title} className="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-white/10" />
         <h2 className="mt-4 line-clamp-2 text-lg font-bold text-white">{post.title}</h2>
         <p className="mt-2 line-clamp-3 text-[13px] leading-6 text-white/45">{getEditableExcerpt(post, 95)}</p>
         <UserRound className="mx-auto mt-3 h-4 w-4 text-[#6366f1]" />
