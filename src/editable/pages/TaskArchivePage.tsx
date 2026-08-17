@@ -111,6 +111,13 @@ function ArchiveCard({ task, post, basePath, index }: { task: TaskKey; post: Sit
   }
 
   if (task === 'profile') {
+    const profileImage = getEditablePostImage(post)
+    const hasRealImage = !profileImage.includes('placeholder.svg')
+    const initials = (() => {
+      const words = String(post.title || '').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(Boolean)
+      if (!words.length) return '?'
+      return `${words[0]?.[0] || ''}${words.length > 1 ? words[words.length - 1]?.[0] || '' : ''}`.toUpperCase()
+    })()
     return (
       <Link href={href} className="block break-inside-avoid rounded-2xl border border-white/8 bg-[#161616] p-6 text-center transition hover:border-white/15">
         <img src={getEditablePostImage(post)} alt={post.title} className="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-white/10" />
