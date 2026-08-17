@@ -3,13 +3,33 @@ import { ArrowRight } from 'lucide-react'
 import type { SitePost } from '@/lib/site-connector'
 import type { TaskKey } from '@/lib/site-config'
 
-export function getEditablePostImage(post?: SitePost | null) {
+function isPlaceholder(url?: string) {
+  return !url || url.includes('placeholder.svg')
+}
+
+export function getEditableRawPostImage(post?: SitePost | null) {
   const media = Array.isArray(post?.media) ? post?.media : []
   const mediaUrl = media.find((item) => typeof item?.url === 'string' && item.url)?.url
   const content = post?.content && typeof post.content === 'object' ? (post.content as Record<string, unknown>) : {}
   const image = typeof content.image === 'string' ? content.image : ''
   const summaryImage = Array.isArray(content.images) ? (content.images.find((it) => typeof it === 'string') as string | undefined) : ''
-  return mediaUrl || image || summaryImage || '/placeholder.svg?height=900&width=1400'
+  const resolved = mediaUrl || image || summaryImage || ''
+  return isPlaceholder(resolved) ? '' : resolved
+}
+
+export function getEditablePostImage(post?: SitePost | null) {
+  return getEditableRawPostImage(post) || '/placeholder.svg?height=900&width=1400'
+}
+
+export function getEditableInitials(post?: SitePost | null) {
+  const words = String(post?.title || '')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+  if (!words.length) return '?'
+  const first = words[0]?.[0] || ''
+  const second = words.length > 1 ? words[words.length - 1]?.[0] || '' : ''
+  return `${first}${second}`.toUpperCase()
 }
 
 export function getEditableExcerpt(post?: SitePost | null, limit = 150) {
